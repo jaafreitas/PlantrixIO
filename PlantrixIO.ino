@@ -1,6 +1,7 @@
 #include "sensorAM2315.h"
 #include "sensorpH.h"
 #include "sensorDS18B20.h"
+#include "serial.h"
 
 void setup() {
   Serial.begin(115200);
@@ -14,5 +15,6 @@ void setup() {
 void loop() {
   loopSensorAM2315();
   loopSensorpH();
-  loopSensorDS18B20();  
+  loopSensorDS18B20();
+  loopSerial();
 }
