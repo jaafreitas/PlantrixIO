@@ -63,6 +63,10 @@ float buffer = 0;
 
 bool canReadSensorDS18B20 = false;
 
+unsigned long previousMillisSensorDS18B20 = 0;
+// Measurments at 5's Second intervals (Dont read Ec morre than once every 5 seconds).  
+const long intervalSensorDS18B20 = 5000;
+
 void GetEC();
 
 void PrintReadings();
@@ -92,15 +96,20 @@ void setupSensorDS18B20() {
 }
 
 void loopSensorDS18B20() {
-  if (canReadSensorDS18B20) {
-    //Calls Code to Go into GetEC() Loop [Below Main Loop] dont call this more that 1/5 hhz [once every five seconds] or you will polarise the water
-    GetEC();
-
-    // Cals Print routine [below main loop]
-    PrintReadings();
-
-  } else {
-    Serial.println("DS18B20 ignored");
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillisSensorDS18B20 >= intervalSensorDS18B20) {
+    previousMillisSensorDS18B20 = currentMillis;
+    
+    if (canReadSensorDS18B20) {
+      //Calls Code to Go into GetEC() Loop [Below Main Loop] dont call this more that 1/5 hhz [once every five seconds] or you will polarise the water
+      GetEC();
+  
+      // Cals Print routine [below main loop]
+      PrintReadings();
+  
+    } else {
+      Serial.println("DS18B20 ignored");
+    }
   }
 }
 

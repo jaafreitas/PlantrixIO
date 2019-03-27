@@ -13,12 +13,6 @@ void setup() {
 
 void loop() {
   loopSensorAM2315();
-  delay(1000);
-
   loopSensorpH();
-  delay(800);
-
-  loopSensorDS18B20();
-  // Measurments at 5's Second intervals (Dont read Ec morre than once every 5 seconds).  
-  delay(5000);  
+  loopSensorDS18B20();  
 }
