@@ -1,6 +1,8 @@
 //************************** Libraries Needed To Compile The Script [See Read me In Download] ***************//
 // Both below Library are custom ones [ SEE READ ME In Downloaded Zip If You Dont Know how To install] Use them or add a pull up resistor to the temp probe
 
+#include "settings.h"
+
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
@@ -13,9 +15,6 @@
 
 int R1 = 300;
 int Ra = 25; //Resistance of powering Pins
-int ECPin = A1;
-int ECGround = A2;
-int ECPower = A3;
 float calib = 0.555;
 
 //*********** Converting to ppm [Learn to use EC it is much better**************//
@@ -36,15 +35,11 @@ float TemperatureCoef = 0.019; //this changes depending on what chemical we are 
 //But If you get bad readings you can use the calibration script and fluid to get a better estimate for K
 float K = 1.23;
 
-//************ Temp Probe Related *********************************************//
-#define ONE_WIRE_BUS 10          // Data wire For Temp Probe is plugged into pin 10 on the Arduino
-const int TempProbePossitive = 8; //Temp Probe power connected to pin 9
-const int TempProbeNegative = 9;  //Temp Probe Negative connected to pin 8
 
 //***************************** END Of Recomended User Inputs *****************************************************************//
 
 // Setup a oneWire instance to communicate with any OneWire devices
-OneWire oneWire(ONE_WIRE_BUS);
+OneWire oneWire(DS18B20OneWireBus);
 
 // Pass our oneWire reference to Dallas Temperature.
 DallasTemperature sensorDS18B20(&oneWire);
@@ -74,14 +69,14 @@ void PrintReadings();
 void setupSensorDS18B20() {
   Serial.print("DS18B20 ");
 
-  pinMode(TempProbeNegative , OUTPUT ); //seting ground pin as output for tmp probe
-  digitalWrite(TempProbeNegative , LOW );//Seting it to ground so it can sink current
-  pinMode(TempProbePossitive , OUTPUT );//ditto but for positive
-  digitalWrite(TempProbePossitive , HIGH );
-  pinMode(ECPin, INPUT);
-  pinMode(ECPower, OUTPUT); //Setting pin for sourcing current
-  pinMode(ECGround, OUTPUT); //setting pin for sinking current
-  digitalWrite(ECGround, LOW); //We can leave the ground connected permanantly
+  pinMode(DS18B20TempGround , OUTPUT ); //seting ground pin as output for tmp probe
+  digitalWrite(DS18B20TempGround , LOW );//Seting it to ground so it can sink current
+  pinMode(DS18B20TempPower , OUTPUT );//ditto but for positive
+  digitalWrite(DS18B20TempPower , HIGH );
+  pinMode(DS18B20Pin, INPUT);
+  pinMode(DS18B20Power, OUTPUT); //Setting pin for sourcing current
+  pinMode(DS18B20Ground, OUTPUT); //setting pin for sinking current
+  digitalWrite(DS18B20Ground, LOW); //We can leave the ground connected permanantly
 
   delay(100);// gives sensor time to settle
   sensorDS18B20.begin();
@@ -121,10 +116,10 @@ void GetEC() {
   Temperature = sensorDS18B20.getTempCByIndex(0); //Stores Value in Variable
 
   //************Estimates Resistance of Liquid ****************//
-  digitalWrite(ECPower, HIGH);
-  raw = analogRead(ECPin);
-  raw = analogRead(ECPin); // This is not a mistake, First reading will be low beause if charged a capacitor
-  digitalWrite(ECPower, LOW);
+  digitalWrite(DS18B20Power, HIGH);
+  raw = analogRead(DS18B20Pin);
+  raw = analogRead(DS18B20Pin); // This is not a mistake, First reading will be low beause if charged a capacitor
+  digitalWrite(DS18B20Power, LOW);
 
   //***************** Converts to EC **************************//
   Vdrop = (Vin * raw) / 1024.0;

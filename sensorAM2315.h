@@ -13,11 +13,6 @@
   BSD license, all text above must be included in any redistribution
  ****************************************************/
 
-// Connect RED of the AM2315 sensor to 5.0V
-// Connect BLACK to Ground
-// Connect WHITE to i2c clock - on '168/'328 Arduino Uno/Duemilanove/etc thats Analog 5
-// Connect YELLOW to i2c data - on '168/'328 Arduino Uno/Duemilanove/etc thats Analog 4
-
 void setupSensorAM2315();
 
 void loopSensorAM2315();

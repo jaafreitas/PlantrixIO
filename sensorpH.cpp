@@ -1,6 +1,6 @@
 #include <Arduino.h>
+#include "settings.h"
 
-#define SensorPin A0            //pH meter Analog output to Arduino Analog Input 0
 #define Offset 20.40            //deviation compensate
 
 unsigned long int avgValue;     //Store the average value of the sensor feedback
@@ -22,7 +22,7 @@ void loopSensorpH() {
   
     // Get 10 sample value from the sensor for smooth the value
     for (int i = 0; i < 10; i++) {
-      buf[i] = analogRead(SensorPin);
+      buf[i] = analogRead(pHPin);
       delay(10);
     }
     

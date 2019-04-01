@@ -1,4 +1,5 @@
 #include <Adafruit_AM2315.h>
+#include "settings.h"
 
 Adafruit_AM2315 sensorAM2315;
 
